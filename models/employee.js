@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Joi = require('joi');
 
 const Employee = mongoose.model('Employee', new mongoose.Schema({
     name: {
@@ -6,10 +7,20 @@ const Employee = mongoose.model('Employee', new mongoose.Schema({
         required: true
     },
     dni: {
-        type: Number,
-        required: true
+        type: String,
+        required: true,
+        unique: true
     }
 }));
 
+function validate(employee) {
+    const schema = {
+        name: Joi.string().min(3).max(48).required(),
+        dni: Joi.string().min(3).required()
+    };
 
-module.exports = Employee;
+    return Joi.validate(employee, schema);
+
+}
+module.exports.validate = validate;
+module.exports.Employee = Employee;

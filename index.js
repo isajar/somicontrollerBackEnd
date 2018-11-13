@@ -4,9 +4,9 @@ const express = require('express');
 const app = express();
 
 // CONECTION TO MONGODB
-mongoose.connect('mongodb://localhost/somicontroller')
+mongoose.connect('mongodb://localhost/somicontroller', { useNewUrlParser: true })
     .then(() => console.log('DB...OK: Conected to Mongo DB'))
-    .catch(error => console.error('Could not conect to MongoDb', error));
+    .catch(error => console.error('DB...ERROR:Could not conect to MongoDb', error));
 
 // MIDDLEWARE 
 app.use(express.json());
