@@ -2,6 +2,7 @@ const { Employee, validate } = require('../models/employee');
 const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
+const { mongoValidId } = require('../shared/utils');
 
 router.get('/', async(req, res) => {
     const employees = await Employee.find();
@@ -10,6 +11,7 @@ router.get('/', async(req, res) => {
 });
 
 router.get('/:id', async(req, res) => {
+    if (!mongoValidId(req.params.id)) return res.status(400).send('Invalid id');
     const employee = await Employee.findById(req.params.id);
 
     if (!employee) return res.status(404).send('The employee with the given id was not found.');
@@ -32,6 +34,8 @@ router.post('/', async(req, res) => {
 });
 
 router.put('/:id', async(req, res) => {
+    if (!mongoValidId(req.params.id)) return res.status(400).send('Invalid id');
+
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
@@ -45,16 +49,7 @@ router.put('/:id', async(req, res) => {
     res.send(employee);
 });
 
-/*
 
-router.post('/', async(req, res) => {
-
-});
-
-router.post('/', async(req, res) => {
-
-});
-*/
 
 
 module.exports = router;
