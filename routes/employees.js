@@ -11,7 +11,7 @@ router.get('/', async(req, res) => {
 });
 
 router.get('/:id', async(req, res) => {
-    if (!mongoValidId(req.params.id)) return res.status(400).send('Invalid id');
+    if (!mongoValidId(req.params.id)) return res.status(400).send('Invalid employee id');
     const employee = await Employee.findById(req.params.id);
 
     if (!employee) return res.status(404).send('The employee with the given id was not found.');
@@ -34,7 +34,7 @@ router.post('/', async(req, res) => {
 });
 
 router.put('/:id', async(req, res) => {
-    if (!mongoValidId(req.params.id)) return res.status(400).send('Invalid id');
+    if (!mongoValidId(req.params.id)) return res.status(400).send('Invalid employee id');
 
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
