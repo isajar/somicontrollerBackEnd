@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const express = require('express');
 const router = express.Router();
 const { Stamp, validate } = require('../models/stamp');
@@ -6,7 +7,21 @@ const { mongoValidId } = require('../shared/utils');
 
 
 router.get('/', async(req, res) => {
-    const stamps = await Stamp.find();
+
+    let stamps = {};
+
+    if (_.isEmpty(req.query)) {
+        stamps = await Stamp.find();
+    } else {
+        const queryObject = {
+            employeeId: req.query.employeeId,
+            //day: { $gte: req.query.dayFrom },
+            //month: { $gte: req.query.montFrom },
+            //year: { $gte: req.query.yearFrom },
+        }
+
+        stamps = await Stamp.find(queryObject);
+    }
 
     res.send(stamps);
 });
@@ -19,6 +34,8 @@ router.get('/:id', async(req, res) => {
 
     res.send(stamp);
 });
+
+
 
 router.post('/', async(req, res) => {
     // check for malformed data
@@ -34,7 +51,7 @@ router.post('/', async(req, res) => {
 
     // create new stamp 
     let stamp = await new Stamp({
-        employee: employee._id,
+        employeeId: employee._id,
         day: req.body.day,
         month: req.body.month,
         year: req.body.year,
