@@ -8,19 +8,15 @@ const { mongoValidId } = require('../shared/utils');
 
 router.get('/', async(req, res) => {
 
-    let stamps = {};
+    let stamps = [];
 
     if (_.isEmpty(req.query)) {
         stamps = await Stamp.find();
     } else {
-        const queryObject = {
+        stamps = await Stamp.find({
             employeeId: req.query.employeeId,
-            //day: { $gte: req.query.dayFrom },
-            //month: { $gte: req.query.montFrom },
-            //year: { $gte: req.query.yearFrom },
-        }
-
-        stamps = await Stamp.find(queryObject);
+            month: req.query.month
+        });
     }
 
     res.send(stamps);
@@ -34,7 +30,6 @@ router.get('/:id', async(req, res) => {
 
     res.send(stamp);
 });
-
 
 
 router.post('/', async(req, res) => {
@@ -52,10 +47,8 @@ router.post('/', async(req, res) => {
     // create new stamp 
     let stamp = await new Stamp({
         employeeId: employee._id,
-        day: req.body.day,
         month: req.body.month,
-        year: req.body.year,
-        times: req.body.times
+        time: req.body.time
     });
 
     stamp = await stamp.save();
@@ -78,10 +71,8 @@ router.put('/:id', async(req, res) => {
 
     const stamp = await Stamp.findOneAndUpdate({ _id: req.params.id }, {
         employee: employee._id,
-        day: req.body.day,
         month: req.body.month,
-        year: req.body.year,
-        times: req.body.times
+        time: req.body.times
     }, { new: true });
 
     if (!stamp) return res.status(404).send('The stamp with the given id was not found.');
