@@ -13,15 +13,19 @@ const Stamp = mongoose.model('Stamp', new mongoose.Schema({
         type: Number,
         required: true
     },
-    time: Date
+    workIn: Date,
+    workOut: Date
 }));
 
 
 function validate(stamp) {
     const schema = {
+        _id: Joi.optional(),
         employeeId: Joi.objectId().required(),
         month: Joi.number().min(1).max(12),
-        time: Joi.date()
+        workIn: Joi.date(),
+        workOut: Joi.date(),
+        __v: Joi.optional()
     };
 
     return Joi.validate(stamp, schema);

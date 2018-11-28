@@ -10,11 +10,19 @@ router.get('/', async(req, res) => {
     res.send(employees);
 });
 
-router.get('/:id', async(req, res) => {
+router.get('/id/:id', async(req, res) => {
     if (!mongoValidId(req.params.id)) return res.status(400).send('Invalid employee id');
     const employee = await Employee.findById(req.params.id);
 
     if (!employee) return res.status(404).send('The employee with the given id was not found.');
+
+    res.send(employee);
+});
+
+router.get('/dni/:dni', async(req, res) => {
+
+    const employee = await Employee.findOne({ dni: req.params.dni });
+    if (!employee) return res.status(404).send('The employee with the given dni was not found.');
 
     res.send(employee);
 });

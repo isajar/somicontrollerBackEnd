@@ -14,8 +14,7 @@ router.get('/', async(req, res) => {
         stamps = await Stamp.find();
     } else {
         stamps = await Stamp.find({
-            employeeId: req.query.employeeId,
-            month: req.query.month
+            month: parseInt(req.query.month)
         });
     }
 
@@ -48,7 +47,7 @@ router.post('/', async(req, res) => {
     let stamp = await new Stamp({
         employeeId: employee._id,
         month: req.body.month,
-        time: req.body.time
+        workIn: req.body.workIn,
     });
 
     stamp = await stamp.save();
@@ -70,15 +69,18 @@ router.put('/:id', async(req, res) => {
     if (!employee) return res.status(404).send('The employee with the given id was not found.');
 
     const stamp = await Stamp.findOneAndUpdate({ _id: req.params.id }, {
-        employee: employee._id,
+        employeeId: req.body.employeeId,
         month: req.body.month,
-        time: req.body.times
+        workIn: req.body.workIn,
+        workOut: req.body.workOut,
     }, { new: true });
 
     if (!stamp) return res.status(404).send('The stamp with the given id was not found.');
 
     res.send(stamp);
 });
+
+
 
 
 module.exports = router;
