@@ -31,7 +31,11 @@ router.post('/', async(req, res) => {
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    let employee = await new Employee({
+    let employee = await Employee.findOne({ dni: req.body.dni });
+    if (employee) return res.status(409).send('The employee with the given dni already exist')
+
+
+    employee = await new Employee({
         name: req.body.name,
         dni: req.body.dni
     });
