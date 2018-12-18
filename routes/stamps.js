@@ -30,7 +30,7 @@ router.get('/:id', async(req, res) => {
     res.send(stamp);
 });
 
-
+/*
 router.post('/', async(req, res) => {
     // check for malformed data
     const { error } = validate(req.body);
@@ -46,15 +46,36 @@ router.post('/', async(req, res) => {
     // create new stamp 
     let stamp = await new Stamp({
         employeeId: employee._id,
-        month: req.body.month,
-        workIn: req.body.workIn,
+        month: (new Date()).getMonth(),
+        workIn: new Date(),
     });
 
     stamp = await stamp.save();
 
     res.send(stamp);
 });
+*/
 
+router.post('/', async(req, res) => {
+
+    // check for valid id
+    if (!mongoValidId(req.body.employeeId)) return res.status(400).send('Invalid employee id');
+
+    // check for employee id existence
+    const employee = await Employee.findById(req.body.employeeId);
+    if (!employee) return res.status(404).send('The employee with the given id was not found.');
+
+    // create new stamp 
+    let stamp = await new Stamp({
+        employeeId: employee._id,
+        month: (new Date()).getMonth(),
+        workIn: new Date(),
+    });
+
+    stamp = await stamp.save();
+
+    res.send(stamp);
+});
 
 router.put('/:id', async(req, res) => {
     // check valid id
@@ -72,7 +93,7 @@ router.put('/:id', async(req, res) => {
         employeeId: req.body.employeeId,
         month: req.body.month,
         workIn: req.body.workIn,
-        workOut: req.body.workOut,
+        workOut: new Date()
     }, { new: true });
 
     if (!stamp) return res.status(404).send('The stamp with the given id was not found.');
