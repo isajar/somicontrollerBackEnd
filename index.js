@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const employeeRouter = require('./routes/employees');
 const stampsRouter = require('./routes/stamps');
+const userRouter = require('./routes/users');
 const express = require('express');
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(function(req, res, next) {
 
 app.use('/api/employees', employeeRouter);
 app.use('/api/stamps', stampsRouter);
+app.use('/api/users', userRouter);
 
 // SERVER INITIALIZATION
 

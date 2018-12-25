@@ -37,7 +37,7 @@ router.post('/', async(req, res) => {
     if (employee) return res.status(409).send('The employee with the given dni already exist')
 
 
-    employee = await new Employee({
+    employee = new Employee({
         name: req.body.name,
         dni: req.body.dni
     });
